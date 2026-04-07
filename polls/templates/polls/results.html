@@ -1,0 +1,81 @@
+<!-- c:/Users/skais/Desktop/Labo dev/DJANGO/django_polls/polls/templates/polls/results.html -->
+{% extends 'polls/base.html' %}
+
+{% block content %}
+<div class="card shadow mb-4 border-0">
+    <div class="card-header bg-info text-white py-3">
+        <h2 class="h4 mb-0">Résultats : {{ poll.question }}</h2>
+    </div>
+    <div class="card-body p-4">
+        <div style="position: relative; height:40vh; width:100%">
+            <canvas id="pollChart"></canvas>
+        </div>
+        <div class="mt-5 text-center">
+            <a href="{% url 'polls:list' %}" class="btn btn-outline-primary">Retour à la liste des sondages</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<script>
+    const pollId = {{ poll.pk }};
+    const ctx = document.getElementById('pollChart').getContext('2d');
+    
+    let labels = [
+        {% for choice in poll.choices.all %}
+            "{{ choice.text|escapejs }}",
+        {% endfor %}
+    ];
+    let dataValues = [
+        {% for choice in poll.choices.all %}
+            {{ choice.vote_count }},
+        {% endfor %}
+    ];
+
+    let pollChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Nombre de votes',
+                data: dataValues,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+                borderRadius: 5,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { precision: 0 }
+                }
+            },
+            animation: { duration: 800 }
+        }
+    });
+
+    const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+    const wsUrl = protocol + window.location.host + '/ws/polls/' + pollId + '/';
+    console.log("Connecting to WebSocket:", wsUrl);
+    
+    const chatSocket = new WebSocket(wsUrl);
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        console.log("Received data from WebSocket:", data);
+        pollChart.data.labels = data.labels;
+        pollChart.data.datasets[0].data = data.votes;
+        pollChart.update();
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('WebSocket s\'est fermé de manière inattendue');
+    };
+</script>
+{% endblock %}
