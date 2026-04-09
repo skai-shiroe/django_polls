@@ -58,9 +58,6 @@ ASGI_APPLICATION = 'config.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
-        'CONFIG': {
-            'hosts': [('127.0.0.1', 6379)],
-        },
     },
 }
 
@@ -98,3 +95,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_LOGIN_URL = '/accounts/login/'
 LOGIN_URL = AUTH_LOGIN_URL
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

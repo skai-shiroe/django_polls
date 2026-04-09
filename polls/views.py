@@ -7,8 +7,9 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.db.models import Avg, Count
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Poll, Choice, Vote
-from .forms import RegisterForm
+from .forms import RegisterForm, PollForm
 
 def poll_list(request):
     polls = Poll.objects.filter(is_active=True).order_by('-created_at')
@@ -137,3 +138,23 @@ def register(request):
         messages.success(request, f"Bienvenue {user.username} !")
         return redirect('polls:list')
     return render(request, 'registration/register.html', {'form': form})
+@user_passes_test(lambda u: u.is_staff)
+def poll_create(request):
+    if request.method == 'POST':
+        form = PollForm(request.POST)
+        if form.is_valid():
+            poll = form.save()
+            
+            # Handle choices if necessary
+            if poll.poll_type in [Poll.SINGLE, Poll.MULTIPLE]:
+                choice_texts = request.POST.getlist('choice_text')
+                for text in choice_texts:
+                    if text.strip():
+                        Choice.objects.create(poll=poll, text=text.strip())
+            
+            messages.success(request, "Le sondage a été créé avec succès.")
+            return redirect('polls:list')
+    else:
+        form = PollForm()
+    
+    return render(request, 'polls/poll_create.html', {'form': form, 'poll_types': Poll.POLL_TYPES})

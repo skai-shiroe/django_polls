@@ -2,133 +2,125 @@
 {% extends 'polls/base.html' %}
 
 {% block content %}
-<div class="mb-6">
-    <a href="{% url 'polls:list' %}" class="inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-blue-500 transition">
-        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        Retour aux sondages
+<div class="mb-8">
+    <a href="{% url 'polls:list' %}" class="inline-flex items-center text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-brand-600 transition">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+        Retour
     </a>
 </div>
 
-<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+<div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
     <!-- Header -->
-    <div class="px-6 py-5 border-b border-gray-100 dark:border-gray-700">
-        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mb-3
-            {% if poll.poll_type == 'single' %}bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
-            {% elif poll.poll_type == 'multiple' %}bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200
-            {% elif poll.poll_type == 'rating' %}bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
-            {% else %}bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200{% endif %}">
+    <div class="px-8 py-8 border-b border-slate-100 dark:border-slate-800">
+        <span class="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded border mb-4 inline-block
+            {% if poll.poll_type == 'single' %}border-blue-200 text-blue-600 dark:border-blue-800/50 dark:text-blue-400
+            {% elif poll.poll_type == 'multiple' %}border-purple-200 text-purple-600 dark:border-purple-800/50 dark:text-purple-400
+            {% elif poll.poll_type == 'rating' %}border-amber-200 text-amber-600 dark:border-amber-800/50 dark:text-amber-400
+            {% else %}border-emerald-200 text-emerald-600 dark:border-emerald-800/50 dark:text-emerald-400{% endif %}">
             {{ poll.get_poll_type_display }}
         </span>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ poll.question }}</h1>
+        <h1 class="text-3xl font-black text-slate-900 dark:text-white leading-tight">{{ poll.question }}</h1>
     </div>
 
     <!-- Form -->
     <form method="post" action="{% url 'polls:detail' poll.id %}" id="vote-form"
-          x-data="{ isLoading: false, voted: false }"
+          x-data="{ isLoading: false, selected: null, selection: [] }"
           @submit="isLoading = true">
         {% csrf_token %}
-        <div class="p-6">
+        <div class="p-8">
             {% if error_message %}
-                <div class="mb-5 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded-lg text-sm">
+                <div class="mb-6 p-4 bg-red-50 border border-red-100 text-red-700 rounded-lg text-sm font-medium">
                     {{ error_message }}
                 </div>
             {% endif %}
 
-            <!-- SINGLE: Radio Cards -->
+            <!-- SINGLE Choice -->
             {% if poll.poll_type == 'single' %}
-            <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">Sélectionnez un seul choix :</p>
-            <div class="space-y-3" x-data="{ selected: null }">
+            <div class="space-y-3">
                 {% for choice in poll.choices.all %}
-                <label class="flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-200"
-                       :class="selected === '{{ choice.id }}' ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30' : 'border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-600'">
-                    <input type="radio" name="choice" value="{{ choice.id }}" class="sr-only"
-                           x-model="selected" @change="selected = '{{ choice.id }}'">
-                    <div class="flex-none w-6 h-6 rounded-full border-2 mr-4 flex items-center justify-center transition-all"
-                         :class="selected === '{{ choice.id }}' ? 'border-blue-500 bg-blue-500' : 'border-gray-300 dark:border-gray-500'">
-                        <svg x-show="selected === '{{ choice.id }}'" class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 8 8">
-                            <circle cx="4" cy="4" r="3"/>
-                        </svg>
+                <label class="flex items-center p-4 rounded-xl border transition-all cursor-pointer"
+                       :class="selected == '{{ choice.id }}' ? 'border-brand-600 bg-brand-50/50 dark:bg-brand-900/10' : 'border-slate-200 dark:border-slate-700 hover:border-brand-400'">
+                    <input type="radio" name="choice" value="{{ choice.id }}" class="sr-only" x-model="selected">
+                    <div class="w-5 h-5 rounded-full border-2 mr-4 flex items-center justify-center transition-all"
+                         :class="selected == '{{ choice.id }}' ? 'border-brand-600' : 'border-slate-300 dark:border-slate-600'">
+                        <div x-show="selected == '{{ choice.id }}'" class="w-2.5 h-2.5 rounded-full bg-brand-600"></div>
                     </div>
-                    <span class="font-medium text-gray-800 dark:text-gray-200">{{ choice.text }}</span>
+                    <span class="font-semibold text-slate-700 dark:text-slate-200">{{ choice.text }}</span>
                 </label>
                 {% endfor %}
             </div>
             {% endif %}
 
-            <!-- MULTIPLE: Checkbox Cards -->
+            <!-- MULTIPLE Choice -->
             {% if poll.poll_type == 'multiple' %}
-            <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">Sélectionnez un ou plusieurs choix :</p>
-            <div class="space-y-3" x-data="{ selected: [] }">
+            <div class="space-y-3">
                 {% for choice in poll.choices.all %}
-                <label class="flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-200"
-                       :class="selected.includes('{{ choice.id }}') ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/30' : 'border-gray-200 dark:border-gray-600 hover:border-purple-300 dark:hover:border-purple-600'">
+                <label class="flex items-center p-4 rounded-xl border transition-all cursor-pointer"
+                       :class="selection.includes('{{ choice.id }}') ? 'border-brand-600 bg-brand-50/50 dark:bg-brand-900/10' : 'border-slate-200 dark:border-slate-700 hover:border-brand-400'">
                     <input type="checkbox" name="choices" value="{{ choice.id }}" class="sr-only"
-                           @change="selected.includes('{{ choice.id }}') ? selected = selected.filter(x => x !== '{{ choice.id }}') : selected.push('{{ choice.id }}')">
-                    <div class="flex-none w-6 h-6 rounded-md border-2 mr-4 flex items-center justify-center transition-all"
-                         :class="selected.includes('{{ choice.id }}') ? 'border-purple-500 bg-purple-500' : 'border-gray-300 dark:border-gray-500'">
-                        <svg x-show="selected.includes('{{ choice.id }}')" class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-                        </svg>
+                           @change="selection.includes('{{ choice.id }}') ? selection = selection.filter(x => x !== '{{ choice.id }}') : selection.push('{{ choice.id }}')">
+                    <div class="w-5 h-5 rounded border-2 mr-4 flex items-center justify-center transition-all"
+                         :class="selection.includes('{{ choice.id }}') ? 'border-brand-600 bg-brand-600' : 'border-slate-300 dark:border-slate-600'">
+                        <svg x-show="selection.includes('{{ choice.id }}')" class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"/></svg>
                     </div>
-                    <span class="font-medium text-gray-800 dark:text-gray-200">{{ choice.text }}</span>
+                    <span class="font-semibold text-slate-700 dark:text-slate-200">{{ choice.text }}</span>
                 </label>
                 {% endfor %}
             </div>
             {% endif %}
 
-            <!-- RATING: 5 Étoiles SVG -->
+            <!-- RATING -->
             {% if poll.poll_type == 'rating' %}
-            <p class="mb-6 text-sm text-gray-500 dark:text-gray-400">Attribuez une note de 1 à 5 étoiles :</p>
-            <div x-data="{ rating: 0, hover: 0 }" class="flex flex-col items-center space-y-4">
-                <div class="flex items-center space-x-2">
+            <div x-data="{ rating: 0, hover: 0 }" class="flex flex-col items-center py-6">
+                <div class="flex items-center space-x-3">
                     {% for i in "12345" %}
                     <button type="button" @click="rating = {{ forloop.counter }}" @mouseenter="hover = {{ forloop.counter }}" @mouseleave="hover = 0"
-                            class="focus:outline-none transition-transform duration-150 hover:scale-125">
-                        <svg class="w-12 h-12 transition-colors duration-200"
-                             :class="(hover >= {{ forloop.counter }} || (!hover && rating >= {{ forloop.counter }})) ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600'"
+                            class="focus:outline-none transition-transform hover:scale-110">
+                        <svg class="w-14 h-14 transition-colors"
+                             :class="(hover >= {{ forloop.counter }} || (!hover && rating >= {{ forloop.counter }})) ? 'text-amber-400' : 'text-slate-200 dark:text-slate-700'"
                              fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                         </svg>
                     </button>
                     {% endfor %}
                 </div>
-                <p class="text-lg font-semibold text-yellow-500" x-text="rating ? rating + ' / 5 étoiles' : 'Pas encore noté'"></p>
                 <input type="hidden" name="score" :value="rating">
+                <p class="mt-4 text-xs font-bold uppercase tracking-widest text-slate-400" x-text="rating ? rating + ' / 5' : 'Sélectionnez une note'"></p>
             </div>
             {% endif %}
 
-            <!-- TEXT: Textarea -->
+            <!-- TEXT -->
             {% if poll.poll_type == 'text' %}
-            <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">Partagez votre réponse :</p>
-            <div x-data="{ text: '', maxLength: 500 }">
-                <textarea name="answer_text" rows="5" x-model="text" :maxlength="maxLength"
-                          placeholder="Saisissez votre réponse ici..."
-                          class="w-full p-4 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-green-500 resize-none transition"></textarea>
-                <div class="flex justify-end mt-1 text-sm" :class="text.length >= maxLength ? 'text-red-500' : 'text-gray-400'">
-                    <span x-text="text.length + ' / ' + maxLength"></span>
+            <div x-data="{ text: '' }">
+                <textarea name="answer_text" rows="5" x-model="text" maxlength="500"
+                          placeholder="Exprimez-vous ici..."
+                          class="w-full p-6 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:outline-none focus:border-brand-600 transition resize-none font-medium"></textarea>
+                <div class="flex justify-end mt-2">
+                    <span class="text-[10px] font-bold text-slate-400" x-text="text.length + ' / 500'"></span>
                 </div>
             </div>
             {% endif %}
         </div>
 
-        <!-- Submit -->
-        <div class="px-6 pb-6 flex items-center justify-between">
-            <a href="{% url 'polls:results' poll.id %}" class="text-sm text-gray-500 dark:text-gray-400 hover:text-blue-500 transition">
-                Voir les résultats sans voter
+        <!-- Footer Actions -->
+        <div class="px-8 pb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <a href="{% url 'polls:results' poll.id %}" class="text-sm font-bold text-slate-400 hover:text-slate-600 transition">
+                Voir les résultats directs
             </a>
             <button type="submit"
-                    class="relative inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-60"
+                    class="w-full sm:w-auto px-8 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg shadow-brand-600/20 transition-all disabled:opacity-50"
                     :disabled="isLoading">
-                <span x-show="!isLoading">Soumettre mon vote</span>
+                <span x-show="!isLoading">Valider mon vote</span>
                 <span x-show="isLoading" class="flex items-center" style="display:none;">
-                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                    <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                     </svg>
-                    Envoi en cours...
+                    Traitement...
                 </span>
             </button>
         </div>
     </form>
 </div>
 {% endblock %}
+

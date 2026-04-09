@@ -4,7 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sondages Temps Réel</title>
+    <title>Sondages Pro</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -12,48 +16,63 @@
             darkMode: 'class',
             theme: {
                 extend: {
-                    colors: { primary: '#3b82f6', secondary: '#10b981' }
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { 
+                        brand: {
+                            50: '#eff6ff', 100: '#dbeafe', 600: '#2563eb', 700: '#1d4ed8'
+                        }
+                    }
                 }
             }
         }
     </script>
+    <style>
+        [x-cloak] { display: none !important; }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
     {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 transition-colors duration-300">
-    <!-- Navbar fixes -->
-    <nav class="fixed top-0 w-full bg-white dark:bg-gray-800 shadow-md z-50 transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="{% url 'polls:list' %}" class="flex-shrink-0 flex items-center text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
-                        ⚡ PollRealtime
+<body class="bg-slate-50 text-slate-900 dark:bg-[#0f172a] dark:text-slate-200 transition-colors duration-200">
+    <!-- Clean Navbar -->
+    <nav class="fixed top-0 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="flex justify-between h-14">
+                <div class="flex items-center space-x-8">
+                    <a href="{% url 'polls:list' %}" class="flex items-center space-x-2 text-slate-900 dark:text-white font-bold tracking-tight">
+                        {% comment %} <div class="w-6 h-6 bg-brand-600 rounded flex items-center justify-center">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </div> {% endcomment %}
+                        <span class="text-lg">God Eyes</span>
                     </a>
+                    
+                    {% if user.is_staff %}
+                    <a href="{% url 'polls:create' %}" class="hidden sm:flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-brand-600 hover:text-brand-700 transition">
+                        <span>Créer un sondage</span>
+                    </a>
+                    {% endif %}
                 </div>
-                <div class="flex items-center space-x-4">
-                    <button @click="darkMode = !darkMode" class="p-2 rounded-full focus:outline-none hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-                        <svg x-show="!darkMode" class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                        </svg>
-                        <svg x-show="darkMode" class="w-6 h-6 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
+
+                <div class="flex items-center space-x-6">
+                    <button @click="darkMode = !darkMode" class="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition">
+                        <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                        <svg x-show="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                     </button>
+
                     {% if user.is_authenticated %}
-                        <div class="hidden sm:flex items-center space-x-2">
-                            <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold uppercase">
-                                {{ user.username|make_list|first }}
-                            </div>
-                            <span class="font-medium">{{ user.username }}</span>
+                        <div class="flex items-center space-x-4 border-l border-slate-200 dark:border-slate-800 pl-6 ml-2">
+                            <span class="text-sm font-medium text-slate-600 dark:text-slate-400">{{ user.username }}</span>
+                            <form method="post" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-red-500 transition">Quitter</button>
+                            </form>
                         </div>
-                        <form method="post" action="{% url 'logout' %}" class="inline">
-                            {% csrf_token %}
-                            <button type="submit" class="text-sm font-medium text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition">Déconnexion</button>
-                        </form>
                     {% else %}
-                        <a href="{% url 'login' %}" class="text-sm font-medium text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 border-r border-gray-300 dark:border-gray-600 pr-4 mr-4">Connexion</a>
-                        <a href="{% url 'register' %}" class="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400">S'inscrire</a>
+                        <div class="flex items-center space-x-6 pl-4">
+                            <a href="{% url 'login' %}" class="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-brand-600 transition">Connexion</a>
+                            <a href="{% url 'register' %}" class="px-4 py-1.5 rounded-md bg-brand-600 text-white text-sm font-bold hover:bg-brand-700 transition shadow-sm">S'inscrire</a>
+                        </div>
                     {% endif %}
                 </div>
             </div>
@@ -61,25 +80,21 @@
     </nav>
 
     <!-- Main Container -->
-    <main class="pt-24 pb-12 max-w-4xl mx-auto px-4 sm:px-6" x-data="{ show: false }" x-init="setTimeout(() => show = true, 50)">
-        
-        <!-- Alerts -->
+    <main class="pt-24 pb-20 max-w-4xl mx-auto px-4 sm:px-6">
+        <!-- Messages/Alerts -->
         {% if messages %}
-            <div class="mb-6 space-y-2">
+            <div class="mb-8 space-y-3">
             {% for message in messages %}
-                <div x-data="{ visible: true }" x-show="visible" class="p-4 rounded-lg shadow-sm font-medium flex justify-between items-center transition 
-                    {% if message.tags == 'error' %}bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-100{% else %}bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-100{% endif %}">
+                <div x-data="{ open: true }" x-show="open" class="flex items-center justify-between p-4 rounded-lg border text-sm font-medium
+                    {% if message.tags == 'error' %}bg-red-50 border-red-200 text-red-700 dark:bg-red-900/20 dark:border-red-800{% else %}bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-900/20 dark:border-emerald-800{% endif %}">
                     <span>{{ message }}</span>
-                    <button @click="visible = false" class="text-lg leading-none">&times;</button>
+                    <button @click="open = false" class="opacity-50 hover:opacity-100">&times;</button>
                 </div>
             {% endfor %}
             </div>
         {% endif %}
         
-        <div x-show="show" x-transition:enter="transition ease-out duration-500"
-             x-transition:enter-start="opacity-0 translate-y-4"
-             x-transition:enter-end="opacity-100 translate-y-0"
-             class="w-full">
+        <div class="animate-in fade-in duration-700">
             {% block content %}{% endblock %}
         </div>
     </main>

@@ -27,7 +27,5 @@ class PollConsumer(AsyncWebsocketConsumer):
         data = event['data']
 
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'labels': data['labels'],
-            'votes': data['votes']
-        }))
+        await self.send(text_data=json.dumps(data))
+
