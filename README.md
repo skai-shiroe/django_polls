@@ -61,6 +61,6 @@
 - **Administrateurs (Staff)** : Ont accès au bouton "Créer un sondage" dans la barre de navigation pour concevoir de nouveaux questionnaires à l'adresse `/create/`.
 - **Résultats** : Accessibles à tout moment pour suivre les tendances en direct.
 
-## ⚙️ Configuration
+##  Configuration
 
 Le projet utilise `InMemoryChannelLayer` pour simplifier le développement local. Pour une mise en production avec plusieurs serveurs, il est recommandé de passer à `RedisChannelLayer`.
