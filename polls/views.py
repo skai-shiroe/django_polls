@@ -6,7 +6,9 @@ from django.contrib import messages
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.db.models import Avg, Count
+from django.contrib.auth import login
 from .models import Poll, Choice, Vote
+from .forms import RegisterForm
 
 def poll_list(request):
     polls = Poll.objects.filter(is_active=True).order_by('-created_at')
@@ -124,3 +126,14 @@ def results(request, poll_id):
         context['recent_texts'] = poll.vote_set.order_by('-id')[:10]
         
     return render(request, 'polls/results.html', context)
+
+def register(request):
+    if request.user.is_authenticated:
+        return redirect('polls:list')
+    form = RegisterForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        user = form.save()
+        login(request, user)
+        messages.success(request, f"Bienvenue {user.username} !")
+        return redirect('polls:list')
+    return render(request, 'registration/register.html', {'form': form})
