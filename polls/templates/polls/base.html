@@ -1,50 +1,88 @@
 <!-- c:/Users/skais/Desktop/Labo dev/DJANGO/django_polls/polls/templates/polls/base.html -->
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))" :class="{ 'dark': darkMode }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sondages Temps Réel</title>
-    <!-- Bootstrap CSS for basic styling -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { padding-top: 70px; background-color: #f8f9fa; }
-        .container { max-width: 800px; }
-    </style>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: { primary: '#3b82f6', secondary: '#10b981' }
+                }
+            }
+        }
+    </script>
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+    {% block extra_head %}{% endblock %}
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'polls:list' %}">Django Polls Realtime</a>
-            <div class="navbar-nav ms-auto">
-                {% if user.is_authenticated %}
-                    <span class="nav-item nav-link text-light">Connecté(e) : {{ user.username }}</span>
-                    <form method="post" action="{% url 'logout' %}" class="d-inline">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-link nav-link">Déconnexion</button>
-                    </form>
-                {% else %}
-                    <a class="nav-item nav-link" href="{% url 'login' %}">Connexion</a>
-                {% endif %}
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 transition-colors duration-300">
+    <!-- Navbar fixes -->
+    <nav class="fixed top-0 w-full bg-white dark:bg-gray-800 shadow-md z-50 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{% url 'polls:list' %}" class="flex-shrink-0 flex items-center text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
+                        ⚡ PollRealtime
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button @click="darkMode = !darkMode" class="p-2 rounded-full focus:outline-none hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                        <svg x-show="!darkMode" class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                        <svg x-show="darkMode" class="w-6 h-6 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </button>
+                    {% if user.is_authenticated %}
+                        <div class="hidden sm:flex items-center space-x-2">
+                            <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold uppercase">
+                                {{ user.username|make_list|first }}
+                            </div>
+                            <span class="font-medium">{{ user.username }}</span>
+                        </div>
+                        <form method="post" action="{% url 'logout' %}" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="text-sm font-medium text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition">Déconnexion</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400">Connexion</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <!-- Main Container -->
+    <main class="pt-24 pb-12 max-w-4xl mx-auto px-4 sm:px-6" x-data="{ show: false }" x-init="setTimeout(() => show = true, 50)">
+        
+        <!-- Alerts -->
         {% if messages %}
+            <div class="mb-6 space-y-2">
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div x-data="{ visible: true }" x-show="visible" class="p-4 rounded-lg shadow-sm font-medium flex justify-between items-center transition 
+                    {% if message.tags == 'error' %}bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-100{% else %}bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-100{% endif %}">
+                    <span>{{ message }}</span>
+                    <button @click="visible = false" class="text-lg leading-none">&times;</button>
                 </div>
             {% endfor %}
+            </div>
         {% endif %}
+        
+        <div x-show="show" x-transition:enter="transition ease-out duration-500"
+             x-transition:enter-start="opacity-0 translate-y-4"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             class="w-full">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
 
-        {% block content %}{% endblock %}
-    </div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>

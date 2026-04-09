@@ -1,81 +1,267 @@
 <!-- c:/Users/skais/Desktop/Labo dev/DJANGO/django_polls/polls/templates/polls/results.html -->
 {% extends 'polls/base.html' %}
 
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+{% endblock %}
+
 {% block content %}
-<div class="card shadow mb-4 border-0">
-    <div class="card-header bg-info text-white py-3">
-        <h2 class="h4 mb-0">Résultats : {{ poll.question }}</h2>
+<div class="mb-6 flex justify-between items-center">
+    <a href="{% url 'polls:list' %}" class="inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-blue-500 transition">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Retour aux sondages
+    </a>
+    {% if user.is_authenticated %}
+    <a href="{% url 'polls:detail' poll.id %}" class="text-sm text-blue-500 hover:text-blue-600 transition">Voter</a>
+    {% endif %}
+</div>
+
+<div x-data="resultsApp()" x-init="init()" class="space-y-6">
+
+    <!-- Header card -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <div class="flex items-start justify-between">
+            <div>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mb-2
+                    {% if poll.poll_type == 'single' %}bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
+                    {% elif poll.poll_type == 'multiple' %}bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200
+                    {% elif poll.poll_type == 'rating' %}bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
+                    {% else %}bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200{% endif %}">
+                    {{ poll.get_poll_type_display }}
+                </span>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ poll.question }}</h1>
+            </div>
+            <!-- Live badge -->
+            <div class="ml-4 flex-shrink-0">
+                <span x-show="wsConnected" class="flex items-center text-xs font-semibold text-green-600 dark:text-green-400">
+                    <span class="relative flex h-2.5 w-2.5 mr-1.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                    </span>
+                    En direct
+                </span>
+                <span x-show="!wsConnected" class="text-xs text-gray-400" style="display:none;">Hors ligne</span>
+            </div>
+        </div>
+
+        <!-- Total votes counter -->
+        <div class="mt-4 flex items-center space-x-2">
+            <span class="text-4xl font-extrabold text-blue-600 dark:text-blue-400" x-text="animatedTotal"></span>
+            <span class="text-gray-500 dark:text-gray-400 text-sm">vote(s) au total</span>
+        </div>
+
+        {% if poll.poll_type == 'rating' %}
+        <div class="mt-2 flex items-center space-x-1">
+            <span class="text-2xl font-bold text-yellow-500" x-text="averageScore.toFixed(1)"></span>
+            <span class="text-gray-500 dark:text-gray-400 text-sm">/ 5 — note moyenne</span>
+        </div>
+        {% endif %}
     </div>
-    <div class="card-body p-4">
-        <div style="position: relative; height:40vh; width:100%">
+
+    <!-- Chart / Results card -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+
+        {% if poll.poll_type == 'single' or poll.poll_type == 'multiple' %}
+        <div style="position:relative; min-height:300px;">
             <canvas id="pollChart"></canvas>
         </div>
-        <div class="mt-5 text-center">
-            <a href="{% url 'polls:list' %}" class="btn btn-outline-primary">Retour à la liste des sondages</a>
+        {% endif %}
+
+        {% if poll.poll_type == 'rating' %}
+        <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="relative" style="width:280px; height:280px;">
+                <canvas id="pollChart"></canvas>
+                <div class="absolute inset-0 flex items-center justify-center flex-col pointer-events-none">
+                    <span class="text-4xl font-black text-yellow-500" x-text="averageScore.toFixed(1)"></span>
+                    <span class="text-sm text-gray-400">/ 5</span>
+                </div>
+            </div>
+            <div class="flex-1 space-y-3 w-full">
+                <template x-for="(count, idx) in scoreCounts" :key="idx">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-sm font-medium text-gray-500 w-8 flex-shrink-0" x-text="(idx+1) + '★'"></span>
+                        <div class="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                            <div class="h-3 bg-yellow-400 rounded-full transition-all duration-700"
+                                 :style="'width: ' + (totalVotes > 0 ? Math.round((count/totalVotes)*100) : 0) + '%'"></div>
+                        </div>
+                        <span class="text-sm text-gray-500 w-6 text-right" x-text="count"></span>
+                    </div>
+                </template>
+            </div>
         </div>
+        {% endif %}
+
+        {% if poll.poll_type == 'text' %}
+        <h2 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">Dernières réponses</h2>
+        <div class="space-y-3 max-h-96 overflow-y-auto pr-2">
+            <template x-for="(txt, i) in textResponses" :key="i">
+                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 leading-relaxed" x-text="txt"></div>
+            </template>
+            <template x-if="textResponses.length === 0">
+                <p class="text-center text-gray-400 py-8">Aucune réponse pour l'instant.</p>
+            </template>
+        </div>
+        {% endif %}
     </div>
+</div>
+
+<!-- Toast notification -->
+<div x-data="{ open: false, message: '' }"
+     @poll-update.window="message = $event.detail; open = true; setTimeout(() => open = false, 4000)"
+     x-show="open"
+     x-transition:enter="transition ease-out duration-300"
+     x-transition:enter-start="opacity-0 translate-y-4"
+     x-transition:enter-end="opacity-100 translate-y-0"
+     x-transition:leave="transition ease-in duration-200"
+     x-transition:leave-end="opacity-0 translate-y-4"
+     class="fixed bottom-6 right-6 z-50 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-5 py-3 rounded-xl shadow-xl text-sm font-medium flex items-center space-x-2"
+     style="display:none;">
+    <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+    </svg>
+    <span x-text="message"></span>
 </div>
 {% endblock %}
 
 {% block scripts %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 <script>
-    const pollId = {{ poll.pk }};
-    const ctx = document.getElementById('pollChart').getContext('2d');
-    
-    let labels = [
-        {% for choice in poll.choices.all %}
-            "{{ choice.text|escapejs }}",
-        {% endfor %}
-    ];
-    let dataValues = [
-        {% for choice in poll.choices.all %}
-            {{ choice.vote_count }},
-        {% endfor %}
-    ];
+    var POLL_TYPE     = "{{ poll.poll_type }}";
+    var POLL_ID       = {{ poll.pk }};
+    var INITIAL_TOTAL = {{ total_votes }};
+    var JUST_VOTED    = {% if messages %}true{% else %}false{% endif %};
 
-    let pollChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Nombre de votes',
-                data: dataValues,
-                backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1,
-                borderRadius: 5,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { precision: 0 }
+    {% if poll.poll_type == 'single' or poll.poll_type == 'multiple' %}
+    var INITIAL_LABELS = [{% for c in poll.choices.all %}"{{ c.text|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
+    var INITIAL_VOTES  = [{% for c in poll.choices.all %}{{ c.vote_count }}{% if not forloop.last %},{% endif %}{% endfor %}];
+    {% elif poll.poll_type == 'rating' %}
+    var INITIAL_AVERAGE = {{ average_score|default:"0" }};
+    var INITIAL_SCORES  = [0, 0, 0, 0, 0];
+    {% elif poll.poll_type == 'text' %}
+    var INITIAL_TEXTS = [{% for v in recent_texts %}"{{ v.answer_text|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
+    {% endif %}
+
+    function animateCount(from, to, duration, setter) {
+        var start = performance.now();
+        function step(now) {
+            var pct = Math.min((now - start) / duration, 1);
+            var ease = 1 - Math.pow(1 - pct, 3);
+            setter(Math.round(from + (to - from) * ease));
+            if (pct < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+    }
+
+    function resultsApp() {
+        return {
+            wsConnected:   false,
+            totalVotes:    INITIAL_TOTAL,
+            animatedTotal: 0,
+            averageScore:  (typeof INITIAL_AVERAGE !== 'undefined') ? INITIAL_AVERAGE : 0,
+            scoreCounts:   (typeof INITIAL_SCORES  !== 'undefined') ? INITIAL_SCORES  : [],
+            textResponses: (typeof INITIAL_TEXTS   !== 'undefined') ? INITIAL_TEXTS   : [],
+            chart:         null,
+
+            init() {
+                var self = this;
+                animateCount(0, this.totalVotes, 1200, function(v) { self.animatedTotal = v; });
+                this.$nextTick(function() { self.buildChart(); });
+
+                var protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                var ws = new WebSocket(protocol + '//' + window.location.host + '/ws/polls/' + POLL_ID + '/');
+                ws.onopen    = function() { self.wsConnected = true; };
+                ws.onclose   = function() { self.wsConnected = false; };
+                ws.onmessage = function(e) { self.handleWS(JSON.parse(e.data)); };
+
+                if (JUST_VOTED) {
+                    setTimeout(function() {
+                        confetti({ particleCount: 160, spread: 80, origin: { y: 0.6 } });
+                    }, 500);
                 }
             },
-            animation: { duration: 800 }
-        }
-    });
 
-    const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-    const wsUrl = protocol + window.location.host + '/ws/polls/' + pollId + '/';
-    console.log("Connecting to WebSocket:", wsUrl);
-    
-    const chatSocket = new WebSocket(wsUrl);
+            buildChart() {
+                var ctx = document.getElementById('pollChart');
+                if (!ctx) return;
 
-    chatSocket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        console.log("Received data from WebSocket:", data);
-        pollChart.data.labels = data.labels;
-        pollChart.data.datasets[0].data = data.votes;
-        pollChart.update();
-    };
+                if (POLL_TYPE === 'single' || POLL_TYPE === 'multiple') {
+                    this.chart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: INITIAL_LABELS,
+                            datasets: [{
+                                label: 'Votes',
+                                data: INITIAL_VOTES,
+                                backgroundColor: [
+                                    'rgba(59,130,246,0.75)', 'rgba(16,185,129,0.75)',
+                                    'rgba(245,158,11,0.75)', 'rgba(239,68,68,0.75)',
+                                    'rgba(139,92,246,0.75)', 'rgba(236,72,153,0.75)'
+                                ],
+                                borderRadius: 8,
+                                borderSkipped: false
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            animation: { duration: 1000, easing: 'easeOutBounce' },
+                            scales: {
+                                x: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: 'rgba(150,150,150,0.1)' } },
+                                y: { grid: { display: false } }
+                            },
+                            plugins: { legend: { display: false } }
+                        }
+                    });
+                } else if (POLL_TYPE === 'rating') {
+                    this.chart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['1 ★', '2 ★', '3 ★', '4 ★', '5 ★'],
+                            datasets: [{
+                                data: this.scoreCounts.length ? this.scoreCounts : [0,0,0,0,0],
+                                backgroundColor: [
+                                    'rgba(239,68,68,0.8)', 'rgba(245,158,11,0.8)',
+                                    'rgba(59,130,246,0.8)', 'rgba(16,185,129,0.8)', 'rgba(139,92,246,0.8)'
+                                ],
+                                borderWidth: 2,
+                                borderColor: 'transparent'
+                            }]
+                        },
+                        options: {
+                            cutout: '72%',
+                            animation: { duration: 1000, easing: 'easeInOutQuart' },
+                            plugins: { legend: { position: 'bottom' } }
+                        }
+                    });
+                }
+            },
 
-    chatSocket.onclose = function(e) {
-        console.error('WebSocket s\'est fermé de manière inattendue');
-    };
+            handleWS(data) {
+                var self = this;
+                var newTotal = data.total || 0;
+                animateCount(this.totalVotes, newTotal, 600, function(v) { self.animatedTotal = v; });
+                this.totalVotes = newTotal;
+
+                if (POLL_TYPE === 'single' || POLL_TYPE === 'multiple') {
+                    if (this.chart) {
+                        this.chart.data.datasets[0].data = data.votes;
+                        this.chart.update();
+                    }
+                } else if (POLL_TYPE === 'rating') {
+                    this.averageScore = data.average || 0;
+                    this.scoreCounts  = data.scores  || [0,0,0,0,0];
+                    if (this.chart) {
+                        this.chart.data.datasets[0].data = this.scoreCounts;
+                        this.chart.update();
+                    }
+                } else if (POLL_TYPE === 'text') {
+                    this.textResponses = data.texts || [];
+                }
+
+                window.dispatchEvent(new CustomEvent('poll-update', { detail: '🗳️ Nouveau vote reçu en temps réel !' }));
+            }
+        };
+    }
 </script>
 {% endblock %}
