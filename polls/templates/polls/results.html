@@ -27,6 +27,18 @@
         </div>
         {% if user.is_authenticated %}
         <a href="{% url 'polls:detail' poll.id %}" class="px-4 py-1.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-bold hover:bg-slate-200 transition">Voter</a>
+        {% if user.is_staff %}
+        <a href="{% url 'polls:export_csv' poll.id %}"
+           class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+            CSV
+        </a>
+        <a href="{% url 'polls:export_pdf' poll.id %}"
+           class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-md bg-red-500 hover:bg-red-600 text-white text-xs font-bold shadow transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+            PDF
+        </a>
+        {% endif %}
         {% endif %}
     </div>
 </div>
