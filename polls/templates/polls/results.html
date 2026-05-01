@@ -171,11 +171,19 @@
 {% endblock %}
 
 {% block scripts %}
+{{ poll_js_data|json_script:"poll-data" }}
+{% if messages %}
+    {{ True|json_script:"just-voted" }}
+{% else %}
+    {{ False|json_script:"just-voted" }}
+{% endif %}
+
 <script>
-    var POLL_TYPE     = "{{ poll.poll_type }}";
-    var POLL_ID       = {{ poll.pk }};
-    var INITIAL_TOTAL = {{ total_votes }};
-    var JUST_VOTED    = {% if messages %}true{% else %}false{% endif %};
+    var pollData = JSON.parse(document.getElementById('poll-data').textContent);
+    var POLL_TYPE     = pollData.type;
+    var POLL_ID       = pollData.id;
+    var INITIAL_TOTAL = pollData.total;
+    var JUST_VOTED    = JSON.parse(document.getElementById('just-voted').textContent);
 
     // Corporate Color Palette
     const CHART_COLORS = [
@@ -184,18 +192,11 @@
     ];
     const BRAND_BLUE = '#2563eb';
 
-    {% if poll.poll_type == 'single' or poll.poll_type == 'multiple' %}
-    var INITIAL_LABELS = [{% for c in poll.choices.all %}"{{ c.text|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
-    var INITIAL_VOTES  = [{% for c in poll.choices.all %}{{ c.vote_count }}{% if not forloop.last %},{% endif %}{% endfor %}];
-    {% elif poll.poll_type == 'rating' %}
-    var INITIAL_AVERAGE = {{ average_score|default:"0" }};
-    var INITIAL_COUNTS = [0, 0, 0, 0, 0];
-    {% for vote in poll.vote_set.all %}
-        {% if vote.score %}{% if vote.score >= 1 and vote.score <= 5 %}INITIAL_COUNTS[{{ vote.score }} - 1]++;{% endif %}{% endif %}
-    {% endfor %}
-    {% elif poll.poll_type == 'text' %}
-    var INITIAL_TEXTS = [{% for v in recent_texts %}"{{ v.answer_text|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
-    {% endif %}
+    var INITIAL_LABELS = pollData.labels || [];
+    var INITIAL_VOTES  = pollData.votes || [];
+    var INITIAL_AVERAGE = pollData.average || 0;
+    var INITIAL_COUNTS = pollData.counts || [];
+    var INITIAL_TEXTS = pollData.texts || [];
 
     function animateCount(from, to, duration, setter) {
         var start = performance.now();

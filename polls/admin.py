@@ -1,22 +1,23 @@
-# c:/Users/skais/Desktop/Labo dev/DJANGO/django_polls/polls/admin.py
 from django.contrib import admin
-from .models import Poll, Choice
+from .models import Poll, Choice, Vote
 
 class ChoiceInline(admin.TabularInline):
     model = Choice
     extra = 3
 
+@admin.register(Poll)
 class PollAdmin(admin.ModelAdmin):
     list_display = ['question', 'poll_type', 'is_active', 'created_at']
+    list_filter = ['is_active', 'poll_type', 'created_at']
+    search_fields = ['question']
+    inlines = [ChoiceInline]
 
-    def get_inline_instances(self, request, obj=None):
-        # Initialiser avec la configuration par défaut
-        inlines = []
-        # N'afficher ChoiceInline que si le sondage est single ou multiple
-        # Si c'est en création (obj=None), on l'affiche par défaut.
-        if not obj or obj.poll_type in [Poll.SINGLE, Poll.MULTIPLE]:
-            inlines.append(ChoiceInline(self.model, self.admin_site))
-        return inlines
+@admin.register(Choice)
+class ChoiceAdmin(admin.ModelAdmin):
+    list_display = ['text', 'poll', 'vote_count']
+    list_filter = ['poll']
 
-admin.site.register(Poll, PollAdmin)
-admin.site.register(Choice)
+@admin.register(Vote)
+class VoteAdmin(admin.ModelAdmin):
+    list_display = ['user', 'poll', 'choice', 'score']
+    list_filter = ['poll', 'score']
