@@ -136,15 +136,42 @@ def results(request, poll_id):
     context = {'poll': poll, 'total_votes': 0}
     ptype = poll.poll_type
     
+    poll_js_data = {
+        'type': ptype,
+        'id': poll.pk,
+    }
+    
     if ptype in [Poll.SINGLE, Poll.MULTIPLE]:
-        context['total_votes'] = poll.vote_set.values('user').distinct().count()
+        total_votes = poll.vote_set.values('user').distinct().count()
+        context['total_votes'] = total_votes
+        poll_js_data['total'] = total_votes
+        poll_js_data['labels'] = [c.text for c in poll.choices.all()]
+        poll_js_data['votes'] = [c.vote_count for c in poll.choices.all()]
     elif ptype == Poll.RATING:
-        context['total_votes'] = poll.vote_set.count()
+        total_votes = poll.vote_set.count()
+        context['total_votes'] = total_votes
+        poll_js_data['total'] = total_votes
+        
         agg = poll.vote_set.aggregate(avg=Avg('score'))
-        context['average_score'] = round(agg['avg'], 1) if agg['avg'] else 0
+        average_score = round(agg['avg'], 1) if agg['avg'] else 0
+        context['average_score'] = average_score
+        poll_js_data['average'] = average_score
+        
+        counts = [0, 0, 0, 0, 0]
+        for v in poll.vote_set.all():
+            if v.score and 1 <= v.score <= 5:
+                counts[v.score - 1] += 1
+        poll_js_data['counts'] = counts
     elif ptype == Poll.TEXT:
-        context['total_votes'] = poll.vote_set.count()
-        context['recent_texts'] = poll.vote_set.order_by('-id')[:10]
+        total_votes = poll.vote_set.count()
+        context['total_votes'] = total_votes
+        poll_js_data['total'] = total_votes
+        
+        recent_texts = poll.vote_set.order_by('-id')[:10]
+        context['recent_texts'] = recent_texts
+        poll_js_data['texts'] = [v.answer_text for v in recent_texts]
+        
+    context['poll_js_data'] = poll_js_data
         
     return render(request, 'polls/results.html', context)
 

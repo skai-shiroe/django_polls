@@ -40,7 +40,16 @@
                 <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-snug group-hover:text-brand-600 transition-colors">{{ poll.question }}</h3>
                 
                 <div class="mt-8 flex items-center justify-between">
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-tighter">{{ poll.created_at|date:"d F Y" }}</p>
+                    <div class="flex items-center gap-3">
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-tighter">{{ poll.created_at|date:"d F Y" }}</p>
+                        {% if user.is_staff %}
+                        <object>
+                            <a href="{% url 'polls:toggle_status' poll.id %}" class="relative z-10 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest transition {% if poll.is_active %}bg-amber-50 text-amber-600 hover:bg-amber-100 dark:bg-amber-900/30 dark:hover:bg-amber-900/50{% else %}bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50{% endif %}">
+                                {% if poll.is_active %}Clôturer{% else %}Ouvrir{% endif %}
+                            </a>
+                        </object>
+                        {% endif %}
+                    </div>
                     <div class="flex items-center text-sm font-bold text-brand-600 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all">
                         <span>{% if not poll.is_active %}Résultats{% elif poll.id in user_voted_polls %}Résultats{% else %}Voter{% endif %}</span>
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>

@@ -733,7 +733,7 @@
         "kind": 6,
         "importPath": "polls.admin",
         "description": "polls.admin",
-        "peekOfCode": "class ChoiceInline(admin.TabularInline):\n    model = Choice\n    extra = 3\nclass PollAdmin(admin.ModelAdmin):\n    list_display = ['question', 'poll_type', 'is_active', 'created_at']\n    def get_inline_instances(self, request, obj=None):\n        # Initialiser avec la configuration par défaut\n        inlines = []\n        # N'afficher ChoiceInline que si le sondage est single ou multiple\n        # Si c'est en création (obj=None), on l'affiche par défaut.",
+        "peekOfCode": "class ChoiceInline(admin.TabularInline):\n    model = Choice\n    extra = 3\n@admin.register(Poll)\nclass PollAdmin(admin.ModelAdmin):\n    list_display = ['question', 'poll_type', 'is_active', 'created_at']\n    list_filter = ['is_active', 'poll_type', 'created_at']\n    search_fields = ['question']\n    inlines = [ChoiceInline]\n@admin.register(Choice)",
         "detail": "polls.admin",
         "documentation": {}
     },
@@ -742,7 +742,25 @@
         "kind": 6,
         "importPath": "polls.admin",
         "description": "polls.admin",
-        "peekOfCode": "class PollAdmin(admin.ModelAdmin):\n    list_display = ['question', 'poll_type', 'is_active', 'created_at']\n    def get_inline_instances(self, request, obj=None):\n        # Initialiser avec la configuration par défaut\n        inlines = []\n        # N'afficher ChoiceInline que si le sondage est single ou multiple\n        # Si c'est en création (obj=None), on l'affiche par défaut.\n        if not obj or obj.poll_type in [Poll.SINGLE, Poll.MULTIPLE]:\n            inlines.append(ChoiceInline(self.model, self.admin_site))\n        return inlines",
+        "peekOfCode": "class PollAdmin(admin.ModelAdmin):\n    list_display = ['question', 'poll_type', 'is_active', 'created_at']\n    list_filter = ['is_active', 'poll_type', 'created_at']\n    search_fields = ['question']\n    inlines = [ChoiceInline]\n@admin.register(Choice)\nclass ChoiceAdmin(admin.ModelAdmin):\n    list_display = ['text', 'poll', 'vote_count']\n    list_filter = ['poll']\n@admin.register(Vote)",
+        "detail": "polls.admin",
+        "documentation": {}
+    },
+    {
+        "label": "ChoiceAdmin",
+        "kind": 6,
+        "importPath": "polls.admin",
+        "description": "polls.admin",
+        "peekOfCode": "class ChoiceAdmin(admin.ModelAdmin):\n    list_display = ['text', 'poll', 'vote_count']\n    list_filter = ['poll']\n@admin.register(Vote)\nclass VoteAdmin(admin.ModelAdmin):\n    list_display = ['user', 'poll', 'choice', 'score']\n    list_filter = ['poll', 'score']",
+        "detail": "polls.admin",
+        "documentation": {}
+    },
+    {
+        "label": "VoteAdmin",
+        "kind": 6,
+        "importPath": "polls.admin",
+        "description": "polls.admin",
+        "peekOfCode": "class VoteAdmin(admin.ModelAdmin):\n    list_display = ['user', 'poll', 'choice', 'score']\n    list_filter = ['poll', 'score']",
         "detail": "polls.admin",
         "documentation": {}
     },
@@ -814,7 +832,7 @@
         "kind": 5,
         "importPath": "polls.urls",
         "description": "polls.urls",
-        "peekOfCode": "app_name = 'polls'\nurlpatterns = [\n    path('', views.poll_list, name='list'),\n    path('dashboard/', views.dashboard, name='dashboard'),\n    path('create/', views.poll_create, name='create'),\n    path('<int:poll_id>/', views.vote, name='detail'),\n    path('<int:poll_id>/results/', views.results, name='results'),\n    path('<int:poll_id>/export/csv/', views.export_poll_csv, name='export_csv'),\n    path('<int:poll_id>/export/pdf/', views.export_poll_pdf, name='export_pdf'),\n]",
+        "peekOfCode": "app_name = 'polls'\nurlpatterns = [\n    path('', views.poll_list, name='list'),\n    path('dashboard/', views.dashboard, name='dashboard'),\n    path('create/', views.poll_create, name='create'),\n    path('<int:poll_id>/', views.vote, name='detail'),\n    path('<int:poll_id>/results/', views.results, name='results'),\n    path('<int:poll_id>/export/csv/', views.export_poll_csv, name='export_csv'),\n    path('<int:poll_id>/export/pdf/', views.export_poll_pdf, name='export_pdf'),\n    path('<int:poll_id>/toggle-status/', views.poll_toggle_status, name='toggle_status'),",
         "detail": "polls.urls",
         "documentation": {}
     },
@@ -823,7 +841,7 @@
         "kind": 5,
         "importPath": "polls.urls",
         "description": "polls.urls",
-        "peekOfCode": "urlpatterns = [\n    path('', views.poll_list, name='list'),\n    path('dashboard/', views.dashboard, name='dashboard'),\n    path('create/', views.poll_create, name='create'),\n    path('<int:poll_id>/', views.vote, name='detail'),\n    path('<int:poll_id>/results/', views.results, name='results'),\n    path('<int:poll_id>/export/csv/', views.export_poll_csv, name='export_csv'),\n    path('<int:poll_id>/export/pdf/', views.export_poll_pdf, name='export_pdf'),\n]",
+        "peekOfCode": "urlpatterns = [\n    path('', views.poll_list, name='list'),\n    path('dashboard/', views.dashboard, name='dashboard'),\n    path('create/', views.poll_create, name='create'),\n    path('<int:poll_id>/', views.vote, name='detail'),\n    path('<int:poll_id>/results/', views.results, name='results'),\n    path('<int:poll_id>/export/csv/', views.export_poll_csv, name='export_csv'),\n    path('<int:poll_id>/export/pdf/', views.export_poll_pdf, name='export_pdf'),\n    path('<int:poll_id>/toggle-status/', views.poll_toggle_status, name='toggle_status'),\n]",
         "detail": "polls.urls",
         "documentation": {}
     },
@@ -832,7 +850,7 @@
         "kind": 2,
         "importPath": "polls.views",
         "description": "polls.views",
-        "peekOfCode": "def poll_list(request):\n    polls = Poll.objects.filter(is_active=True).order_by('-created_at')\n    user_voted_polls = []\n    if request.user.is_authenticated:\n        user_voted_polls = Vote.objects.filter(user=request.user).values_list('poll_id', flat=True).distinct()\n    return render(request, 'polls/list.html', {\n        'polls': polls,\n        'user_voted_polls': list(user_voted_polls)\n    })\n@login_required",
+        "peekOfCode": "def poll_list(request):\n    polls = Poll.objects.all().order_by('-is_active', '-created_at')\n    user_voted_polls = []\n    if request.user.is_authenticated:\n        user_voted_polls = Vote.objects.filter(user=request.user).values_list('poll_id', flat=True).distinct()\n    return render(request, 'polls/list.html', {\n        'polls': polls,\n        'user_voted_polls': list(user_voted_polls)\n    })\n@login_required",
         "detail": "polls.views",
         "documentation": {}
     },
@@ -841,7 +859,7 @@
         "kind": 2,
         "importPath": "polls.views",
         "description": "polls.views",
-        "peekOfCode": "def vote(request, poll_id):\n    poll = get_object_or_404(Poll, pk=poll_id, is_active=True)\n    # Verification au niveau de la vue (remplace unique_together)\n    if Vote.objects.filter(user=request.user, poll=poll).exists():\n        messages.error(request, \"Vous avez déjà voté pour ce sondage.\")\n        return redirect('polls:results', poll_id=poll.id)\n    if request.method == 'POST':\n        ptype = poll.poll_type\n        saved_votes = False\n        if ptype == Poll.SINGLE:",
+        "peekOfCode": "def vote(request, poll_id):\n    poll = get_object_or_404(Poll, pk=poll_id)\n    # Verification au niveau de la vue (remplace unique_together)\n    if Vote.objects.filter(user=request.user, poll=poll).exists():\n        messages.error(request, \"Vous avez déjà voté pour ce sondage.\")\n        return redirect('polls:results', poll_id=poll.id)\n    if request.method == 'POST':\n        if not poll.is_active:\n            messages.error(request, \"Ce sondage est clôturé. Vous ne pouvez plus voter.\")\n            return redirect('polls:results', poll_id=poll.id)",
         "detail": "polls.views",
         "documentation": {}
     },
@@ -850,7 +868,7 @@
         "kind": 2,
         "importPath": "polls.views",
         "description": "polls.views",
-        "peekOfCode": "def results(request, poll_id):\n    poll = get_object_or_404(Poll, pk=poll_id)\n    context = {'poll': poll, 'total_votes': 0}\n    ptype = poll.poll_type\n    if ptype in [Poll.SINGLE, Poll.MULTIPLE]:\n        context['total_votes'] = poll.vote_set.values('user').distinct().count()\n    elif ptype == Poll.RATING:\n        context['total_votes'] = poll.vote_set.count()\n        agg = poll.vote_set.aggregate(avg=Avg('score'))\n        context['average_score'] = round(agg['avg'], 1) if agg['avg'] else 0",
+        "peekOfCode": "def results(request, poll_id):\n    poll = get_object_or_404(Poll, pk=poll_id)\n    context = {'poll': poll, 'total_votes': 0}\n    ptype = poll.poll_type\n    poll_js_data = {\n        'type': ptype,\n        'id': poll.pk,\n    }\n    if ptype in [Poll.SINGLE, Poll.MULTIPLE]:\n        total_votes = poll.vote_set.values('user').distinct().count()",
         "detail": "polls.views",
         "documentation": {}
     },
@@ -869,6 +887,15 @@
         "importPath": "polls.views",
         "description": "polls.views",
         "peekOfCode": "def poll_create(request):\n    if request.method == 'POST':\n        form = PollForm(request.POST)\n        if form.is_valid():\n            poll = form.save()\n            # Handle choices if necessary\n            if poll.poll_type in [Poll.SINGLE, Poll.MULTIPLE]:\n                choice_texts = request.POST.getlist('choice_text')\n                for text in choice_texts:\n                    if text.strip():",
+        "detail": "polls.views",
+        "documentation": {}
+    },
+    {
+        "label": "poll_toggle_status",
+        "kind": 2,
+        "importPath": "polls.views",
+        "description": "polls.views",
+        "peekOfCode": "def poll_toggle_status(request, poll_id):\n    poll = get_object_or_404(Poll, pk=poll_id)\n    poll.is_active = not poll.is_active\n    poll.save()\n    status = \"ouvert\" if poll.is_active else \"clôturé\"\n    messages.success(request, f\"Le sondage a été {status} avec succès.\")\n    # On redirige vers la page d'où l'on vient (dashboard ou liste)\n    return redirect(request.META.get('HTTP_REFERER', 'polls:dashboard'))\n# ─── Dashboard ────────────────────────────────────────────────────────────────\n@user_passes_test(lambda u: u.is_staff)",
         "detail": "polls.views",
         "documentation": {}
     },
