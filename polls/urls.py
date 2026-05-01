@@ -10,4 +10,5 @@ urlpatterns = [
     path('<int:poll_id>/results/', views.results, name='results'),
     path('<int:poll_id>/export/csv/', views.export_poll_csv, name='export_csv'),
     path('<int:poll_id>/export/pdf/', views.export_poll_pdf, name='export_pdf'),
+    path('<int:poll_id>/toggle-status/', views.poll_toggle_status, name='toggle_status'),
 ]

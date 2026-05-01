@@ -12,16 +12,23 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {% for poll in polls %}
             <a href="{% url 'polls:detail' poll.id %}" 
-               class="group relative bg-white dark:bg-slate-800 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-600 dark:hover:border-brand-600 transition-all duration-300">
+               class="group relative bg-white dark:bg-slate-800 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-600 dark:hover:border-brand-600 transition-all duration-300 {% if not poll.is_active %}opacity-75{% endif %}">
                 
                 <div class="flex justify-between items-start mb-6">
-                    <span class="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded border
-                        {% if poll.poll_type == 'single' %}border-blue-200 text-blue-600 dark:border-blue-800/50 dark:text-blue-400
-                        {% elif poll.poll_type == 'multiple' %}border-purple-200 text-purple-600 dark:border-purple-800/50 dark:text-purple-400
-                        {% elif poll.poll_type == 'rating' %}border-amber-200 text-amber-600 dark:border-amber-800/50 dark:text-amber-400
-                        {% else %}border-emerald-200 text-emerald-600 dark:border-emerald-800/50 dark:text-emerald-400{% endif %}">
-                        {{ poll.get_poll_type_display }}
-                    </span>
+                    <div class="flex gap-2">
+                        <span class="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded border
+                            {% if poll.poll_type == 'single' %}border-blue-200 text-blue-600 dark:border-blue-800/50 dark:text-blue-400
+                            {% elif poll.poll_type == 'multiple' %}border-purple-200 text-purple-600 dark:border-purple-800/50 dark:text-purple-400
+                            {% elif poll.poll_type == 'rating' %}border-amber-200 text-amber-600 dark:border-amber-800/50 dark:text-amber-400
+                            {% else %}border-emerald-200 text-emerald-600 dark:border-emerald-800/50 dark:text-emerald-400{% endif %}">
+                            {{ poll.get_poll_type_display }}
+                        </span>
+                        {% if not poll.is_active %}
+                        <span class="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded border border-slate-200 text-slate-500 dark:border-slate-700 dark:text-slate-400">
+                            Clôturé
+                        </span>
+                        {% endif %}
+                    </div>
                     
                     {% if poll.id in user_voted_polls %}
                     <div class="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white shadow-sm">
@@ -35,7 +42,7 @@
                 <div class="mt-8 flex items-center justify-between">
                     <p class="text-[11px] font-bold text-slate-400 uppercase tracking-tighter">{{ poll.created_at|date:"d F Y" }}</p>
                     <div class="flex items-center text-sm font-bold text-brand-600 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all">
-                        <span>{% if poll.id in user_voted_polls %}Résultats{% else %}Voter{% endif %}</span>
+                        <span>{% if not poll.is_active %}Résultats{% elif poll.id in user_voted_polls %}Résultats{% else %}Voter{% endif %}</span>
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
                     </div>
                 </div>

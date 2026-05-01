@@ -33,13 +33,20 @@
                 </div>
             {% endif %}
 
+            {% if not poll.is_active %}
+                <div class="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 rounded-xl flex items-center gap-3">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m0 0v2m0-2h2m-2 0H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <p class="text-sm font-bold">Ce sondage est clôturé. Les votes ne sont plus acceptés.</p>
+                </div>
+            {% endif %}
+
             <!-- SINGLE Choice -->
             {% if poll.poll_type == 'single' %}
             <div class="space-y-3">
                 {% for choice in poll.choices.all %}
-                <label class="flex items-center p-4 rounded-xl border transition-all cursor-pointer"
+                <label class="flex items-center p-4 rounded-xl border transition-all {% if poll.is_active %}cursor-pointer{% else %}cursor-not-allowed opacity-60{% endif %}"
                        :class="selected == '{{ choice.id }}' ? 'border-brand-600 bg-brand-50/50 dark:bg-brand-900/10' : 'border-slate-200 dark:border-slate-700 hover:border-brand-400'">
-                    <input type="radio" name="choice" value="{{ choice.id }}" class="sr-only" x-model="selected">
+                    <input type="radio" name="choice" value="{{ choice.id }}" class="sr-only" x-model="selected" {% if not poll.is_active %}disabled{% endif %}>
                     <div class="w-5 h-5 rounded-full border-2 mr-4 flex items-center justify-center transition-all"
                          :class="selected == '{{ choice.id }}' ? 'border-brand-600' : 'border-slate-300 dark:border-slate-600'">
                         <div x-show="selected == '{{ choice.id }}'" class="w-2.5 h-2.5 rounded-full bg-brand-600"></div>
@@ -54,9 +61,9 @@
             {% if poll.poll_type == 'multiple' %}
             <div class="space-y-3">
                 {% for choice in poll.choices.all %}
-                <label class="flex items-center p-4 rounded-xl border transition-all cursor-pointer"
+                <label class="flex items-center p-4 rounded-xl border transition-all {% if poll.is_active %}cursor-pointer{% else %}cursor-not-allowed opacity-60{% endif %}"
                        :class="selection.includes('{{ choice.id }}') ? 'border-brand-600 bg-brand-50/50 dark:bg-brand-900/10' : 'border-slate-200 dark:border-slate-700 hover:border-brand-400'">
-                    <input type="checkbox" name="choices" value="{{ choice.id }}" class="sr-only"
+                    <input type="checkbox" name="choices" value="{{ choice.id }}" class="sr-only" {% if not poll.is_active %}disabled{% endif %}
                            @change="selection.includes('{{ choice.id }}') ? selection = selection.filter(x => x !== '{{ choice.id }}') : selection.push('{{ choice.id }}')">
                     <div class="w-5 h-5 rounded border-2 mr-4 flex items-center justify-center transition-all"
                          :class="selection.includes('{{ choice.id }}') ? 'border-brand-600 bg-brand-600' : 'border-slate-300 dark:border-slate-600'">
@@ -73,7 +80,7 @@
             <div x-data="{ rating: 0, hover: 0 }" class="flex flex-col items-center py-6">
                 <div class="flex items-center space-x-3">
                     {% for i in "12345" %}
-                    <button type="button" @click="rating = {{ forloop.counter }}" @mouseenter="hover = {{ forloop.counter }}" @mouseleave="hover = 0"
+                    <button type="button" {% if poll.is_active %}@click="rating = {{ forloop.counter }}" @mouseenter="hover = {{ forloop.counter }}" @mouseleave="hover = 0"{% else %}disabled{% endif %}
                             class="focus:outline-none transition-transform hover:scale-110">
                         <svg class="w-14 h-14 transition-colors"
                              :class="(hover >= {{ forloop.counter }} || (!hover && rating >= {{ forloop.counter }})) ? 'text-amber-400' : 'text-slate-200 dark:text-slate-700'"
@@ -92,8 +99,8 @@
             {% if poll.poll_type == 'text' %}
             <div x-data="{ text: '' }">
                 <textarea name="answer_text" rows="5" x-model="text" maxlength="500"
-                          placeholder="Exprimez-vous ici..."
-                          class="w-full p-6 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:outline-none focus:border-brand-600 transition resize-none font-medium"></textarea>
+                          placeholder="Exprimez-vous ici..." {% if not poll.is_active %}disabled{% endif %}
+                          class="w-full p-6 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:outline-none focus:border-brand-600 transition resize-none font-medium {% if not poll.is_active %}opacity-60 cursor-not-allowed{% endif %}"></textarea>
                 <div class="flex justify-end mt-2">
                     <span class="text-[10px] font-bold text-slate-400" x-text="text.length + ' / 500'"></span>
                 </div>
@@ -108,7 +115,7 @@
             </a>
             <button type="submit"
                     class="w-full sm:w-auto px-8 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg shadow-brand-600/20 transition-all disabled:opacity-50"
-                    :disabled="isLoading">
+                    :disabled="isLoading || {% if poll.is_active %}false{% else %}true{% endif %}">
                 <span x-show="!isLoading">Valider mon vote</span>
                 <span x-show="isLoading" class="flex items-center" style="display:none;">
                     <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">

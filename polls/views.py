@@ -28,7 +28,7 @@ from .models import Poll, Choice, Vote
 from .forms import RegisterForm, PollForm
 
 def poll_list(request):
-    polls = Poll.objects.filter(is_active=True).order_by('-created_at')
+    polls = Poll.objects.all().order_by('-is_active', '-created_at')
     user_voted_polls = []
     if request.user.is_authenticated:
         user_voted_polls = Vote.objects.filter(user=request.user).values_list('poll_id', flat=True).distinct()
@@ -40,7 +40,7 @@ def poll_list(request):
 
 @login_required
 def vote(request, poll_id):
-    poll = get_object_or_404(Poll, pk=poll_id, is_active=True)
+    poll = get_object_or_404(Poll, pk=poll_id)
     
     # Verification au niveau de la vue (remplace unique_together)
     if Vote.objects.filter(user=request.user, poll=poll).exists():
@@ -48,6 +48,10 @@ def vote(request, poll_id):
         return redirect('polls:results', poll_id=poll.id)
             
     if request.method == 'POST':
+        if not poll.is_active:
+            messages.error(request, "Ce sondage est clôturé. Vous ne pouvez plus voter.")
+            return redirect('polls:results', poll_id=poll.id)
+            
         ptype = poll.poll_type
         saved_votes = False
         
@@ -175,6 +179,18 @@ def poll_create(request):
     
     return render(request, 'polls/poll_create.html', {'form': form, 'poll_types': Poll.POLL_TYPES})
 
+@user_passes_test(lambda u: u.is_staff)
+def poll_toggle_status(request, poll_id):
+    poll = get_object_or_404(Poll, pk=poll_id)
+    poll.is_active = not poll.is_active
+    poll.save()
+    
+    status = "ouvert" if poll.is_active else "clôturé"
+    messages.success(request, f"Le sondage a été {status} avec succès.")
+    
+    # On redirige vers la page d'où l'on vient (dashboard ou liste)
+    return redirect(request.META.get('HTTP_REFERER', 'polls:dashboard'))
+
 
 # ─── Dashboard ────────────────────────────────────────────────────────────────
 
@@ -196,6 +212,8 @@ def dashboard(request):
 
     # Top 5 sondages les plus actifs
     top_polls = polls.order_by('-vote_count')[:5]
+    top_labels = [p.question[:28] + '...' if len(p.question) > 28 else p.question for p in top_polls]
+    top_values = [p.vote_count for p in top_polls]
 
     context = {
         'polls': polls,
@@ -204,6 +222,8 @@ def dashboard(request):
         'active_polls': active_polls,
         'type_counts': type_counts,
         'type_counts_json': json.dumps(type_counts),
+        'top_labels_json': json.dumps(top_labels),
+        'top_values_json': json.dumps(top_values),
         'top_polls': top_polls,
     }
     return render(request, 'polls/dashboard.html', context)
