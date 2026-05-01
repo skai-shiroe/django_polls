@@ -114,6 +114,14 @@
         "documentation": {}
     },
     {
+        "label": "register",
+        "importPath": "polls.views",
+        "description": "polls.views",
+        "isExtraImport": true,
+        "detail": "polls.views",
+        "documentation": {}
+    },
+    {
         "label": "django.db.models.deletion",
         "kind": 6,
         "isExtraImport": true,
@@ -128,6 +136,22 @@
         "description": "django.conf",
         "isExtraImport": true,
         "detail": "django.conf",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
         "documentation": {}
     },
     {
@@ -172,11 +196,60 @@
         "documentation": {}
     },
     {
+        "label": "forms",
+        "importPath": "django",
+        "description": "django",
+        "isExtraImport": true,
+        "detail": "django",
+        "documentation": {}
+    },
+    {
+        "label": "UserCreationForm",
+        "importPath": "django.contrib.auth.forms",
+        "description": "django.contrib.auth.forms",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth.forms",
+        "documentation": {}
+    },
+    {
         "label": "User",
         "importPath": "django.contrib.auth.models",
         "description": "django.contrib.auth.models",
         "isExtraImport": true,
         "detail": "django.contrib.auth.models",
+        "documentation": {}
+    },
+    {
+        "label": "User",
+        "importPath": "django.contrib.auth.models",
+        "description": "django.contrib.auth.models",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth.models",
+        "documentation": {}
+    },
+    {
+        "label": "csv",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "csv",
+        "description": "csv",
+        "detail": "csv",
+        "documentation": {}
+    },
+    {
+        "label": "BytesIO",
+        "importPath": "io",
+        "description": "io",
+        "isExtraImport": true,
+        "detail": "io",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
         "documentation": {}
     },
     {
@@ -212,6 +285,46 @@
         "documentation": {}
     },
     {
+        "label": "user_passes_test",
+        "importPath": "django.contrib.auth.decorators",
+        "description": "django.contrib.auth.decorators",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth.decorators",
+        "documentation": {}
+    },
+    {
+        "label": "HttpResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "Avg",
+        "importPath": "django.db.models",
+        "description": "django.db.models",
+        "isExtraImport": true,
+        "detail": "django.db.models",
+        "documentation": {}
+    },
+    {
+        "label": "Count",
+        "importPath": "django.db.models",
+        "description": "django.db.models",
+        "isExtraImport": true,
+        "detail": "django.db.models",
+        "documentation": {}
+    },
+    {
+        "label": "login",
+        "importPath": "django.contrib.auth",
+        "description": "django.contrib.auth",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth",
+        "documentation": {}
+    },
+    {
         "label": "get_channel_layer",
         "importPath": "channels.layers",
         "description": "channels.layers",
@@ -225,6 +338,142 @@
         "description": "asgiref.sync",
         "isExtraImport": true,
         "detail": "asgiref.sync",
+        "documentation": {}
+    },
+    {
+        "label": "A4",
+        "importPath": "reportlab.lib.pagesizes",
+        "description": "reportlab.lib.pagesizes",
+        "isExtraImport": true,
+        "detail": "reportlab.lib.pagesizes",
+        "documentation": {}
+    },
+    {
+        "label": "colors",
+        "importPath": "reportlab.lib",
+        "description": "reportlab.lib",
+        "isExtraImport": true,
+        "detail": "reportlab.lib",
+        "documentation": {}
+    },
+    {
+        "label": "getSampleStyleSheet",
+        "importPath": "reportlab.lib.styles",
+        "description": "reportlab.lib.styles",
+        "isExtraImport": true,
+        "detail": "reportlab.lib.styles",
+        "documentation": {}
+    },
+    {
+        "label": "ParagraphStyle",
+        "importPath": "reportlab.lib.styles",
+        "description": "reportlab.lib.styles",
+        "isExtraImport": true,
+        "detail": "reportlab.lib.styles",
+        "documentation": {}
+    },
+    {
+        "label": "cm",
+        "importPath": "reportlab.lib.units",
+        "description": "reportlab.lib.units",
+        "isExtraImport": true,
+        "detail": "reportlab.lib.units",
+        "documentation": {}
+    },
+    {
+        "label": "SimpleDocTemplate",
+        "importPath": "reportlab.platypus",
+        "description": "reportlab.platypus",
+        "isExtraImport": true,
+        "detail": "reportlab.platypus",
+        "documentation": {}
+    },
+    {
+        "label": "Paragraph",
+        "importPath": "reportlab.platypus",
+        "description": "reportlab.platypus",
+        "isExtraImport": true,
+        "detail": "reportlab.platypus",
+        "documentation": {}
+    },
+    {
+        "label": "Spacer",
+        "importPath": "reportlab.platypus",
+        "description": "reportlab.platypus",
+        "isExtraImport": true,
+        "detail": "reportlab.platypus",
+        "documentation": {}
+    },
+    {
+        "label": "Table",
+        "importPath": "reportlab.platypus",
+        "description": "reportlab.platypus",
+        "isExtraImport": true,
+        "detail": "reportlab.platypus",
+        "documentation": {}
+    },
+    {
+        "label": "TableStyle",
+        "importPath": "reportlab.platypus",
+        "description": "reportlab.platypus",
+        "isExtraImport": true,
+        "detail": "reportlab.platypus",
+        "documentation": {}
+    },
+    {
+        "label": "HRFlowable",
+        "importPath": "reportlab.platypus",
+        "description": "reportlab.platypus",
+        "isExtraImport": true,
+        "detail": "reportlab.platypus",
+        "documentation": {}
+    },
+    {
+        "label": "Drawing",
+        "importPath": "reportlab.graphics.shapes",
+        "description": "reportlab.graphics.shapes",
+        "isExtraImport": true,
+        "detail": "reportlab.graphics.shapes",
+        "documentation": {}
+    },
+    {
+        "label": "Rect",
+        "importPath": "reportlab.graphics.shapes",
+        "description": "reportlab.graphics.shapes",
+        "isExtraImport": true,
+        "detail": "reportlab.graphics.shapes",
+        "documentation": {}
+    },
+    {
+        "label": "String",
+        "importPath": "reportlab.graphics.shapes",
+        "description": "reportlab.graphics.shapes",
+        "isExtraImport": true,
+        "detail": "reportlab.graphics.shapes",
+        "documentation": {}
+    },
+    {
+        "label": "renderPDF",
+        "importPath": "reportlab.graphics",
+        "description": "reportlab.graphics",
+        "isExtraImport": true,
+        "detail": "reportlab.graphics",
+        "documentation": {}
+    },
+    {
+        "label": "TA_CENTER",
+        "importPath": "reportlab.lib.enums",
+        "description": "reportlab.lib.enums",
+        "isExtraImport": true,
+        "detail": "reportlab.lib.enums",
+        "documentation": {}
+    },
+    {
+        "label": "TA_LEFT",
+        "importPath": "reportlab.lib.enums",
+        "description": "reportlab.lib.enums",
+        "isExtraImport": true,
+        "detail": "reportlab.lib.enums",
         "documentation": {}
     },
     {
@@ -331,7 +580,7 @@
         "kind": 5,
         "importPath": "config.settings",
         "description": "config.settings",
-        "peekOfCode": "ASGI_APPLICATION = 'config.asgi.application'\nCHANNEL_LAYERS = {\n    'default': {\n        'BACKEND': 'channels.layers.InMemoryChannelLayer',\n        'CONFIG': {\n            'hosts': [('127.0.0.1', 6379)],\n        },\n    },\n}\nDATABASES = {",
+        "peekOfCode": "ASGI_APPLICATION = 'config.asgi.application'\nCHANNEL_LAYERS = {\n    'default': {\n        'BACKEND': 'channels.layers.InMemoryChannelLayer',\n    },\n}\nDATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.sqlite3',\n        'NAME': BASE_DIR / 'db.sqlite3',",
         "detail": "config.settings",
         "documentation": {}
     },
@@ -340,7 +589,7 @@
         "kind": 5,
         "importPath": "config.settings",
         "description": "config.settings",
-        "peekOfCode": "CHANNEL_LAYERS = {\n    'default': {\n        'BACKEND': 'channels.layers.InMemoryChannelLayer',\n        'CONFIG': {\n            'hosts': [('127.0.0.1', 6379)],\n        },\n    },\n}\nDATABASES = {\n    'default': {",
+        "peekOfCode": "CHANNEL_LAYERS = {\n    'default': {\n        'BACKEND': 'channels.layers.InMemoryChannelLayer',\n    },\n}\nDATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.sqlite3',\n        'NAME': BASE_DIR / 'db.sqlite3',\n    }",
         "detail": "config.settings",
         "documentation": {}
     },
@@ -367,7 +616,7 @@
         "kind": 5,
         "importPath": "config.settings",
         "description": "config.settings",
-        "peekOfCode": "LANGUAGE_CODE = 'en-us'\nTIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\nSTATIC_URL = 'static/'\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nAUTH_LOGIN_URL = '/accounts/login/'\nLOGIN_URL = AUTH_LOGIN_URL\nLOGIN_REDIRECT_URL = '/'",
+        "peekOfCode": "LANGUAGE_CODE = 'en-us'\nTIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\nSTATIC_URL = 'static/'\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nAUTH_LOGIN_URL = '/accounts/login/'\nLOGIN_URL = AUTH_LOGIN_URL\nLOGIN_REDIRECT_URL = '/'\nLOGOUT_REDIRECT_URL = '/'",
         "detail": "config.settings",
         "documentation": {}
     },
@@ -376,7 +625,7 @@
         "kind": 5,
         "importPath": "config.settings",
         "description": "config.settings",
-        "peekOfCode": "TIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\nSTATIC_URL = 'static/'\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nAUTH_LOGIN_URL = '/accounts/login/'\nLOGIN_URL = AUTH_LOGIN_URL\nLOGIN_REDIRECT_URL = '/'",
+        "peekOfCode": "TIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\nSTATIC_URL = 'static/'\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nAUTH_LOGIN_URL = '/accounts/login/'\nLOGIN_URL = AUTH_LOGIN_URL\nLOGIN_REDIRECT_URL = '/'\nLOGOUT_REDIRECT_URL = '/'",
         "detail": "config.settings",
         "documentation": {}
     },
@@ -385,7 +634,7 @@
         "kind": 5,
         "importPath": "config.settings",
         "description": "config.settings",
-        "peekOfCode": "USE_I18N = True\nUSE_TZ = True\nSTATIC_URL = 'static/'\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nAUTH_LOGIN_URL = '/accounts/login/'\nLOGIN_URL = AUTH_LOGIN_URL\nLOGIN_REDIRECT_URL = '/'",
+        "peekOfCode": "USE_I18N = True\nUSE_TZ = True\nSTATIC_URL = 'static/'\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nAUTH_LOGIN_URL = '/accounts/login/'\nLOGIN_URL = AUTH_LOGIN_URL\nLOGIN_REDIRECT_URL = '/'\nLOGOUT_REDIRECT_URL = '/'",
         "detail": "config.settings",
         "documentation": {}
     },
@@ -394,7 +643,7 @@
         "kind": 5,
         "importPath": "config.settings",
         "description": "config.settings",
-        "peekOfCode": "USE_TZ = True\nSTATIC_URL = 'static/'\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nAUTH_LOGIN_URL = '/accounts/login/'\nLOGIN_URL = AUTH_LOGIN_URL\nLOGIN_REDIRECT_URL = '/'",
+        "peekOfCode": "USE_TZ = True\nSTATIC_URL = 'static/'\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nAUTH_LOGIN_URL = '/accounts/login/'\nLOGIN_URL = AUTH_LOGIN_URL\nLOGIN_REDIRECT_URL = '/'\nLOGOUT_REDIRECT_URL = '/'",
         "detail": "config.settings",
         "documentation": {}
     },
@@ -403,7 +652,7 @@
         "kind": 5,
         "importPath": "config.settings",
         "description": "config.settings",
-        "peekOfCode": "STATIC_URL = 'static/'\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nAUTH_LOGIN_URL = '/accounts/login/'\nLOGIN_URL = AUTH_LOGIN_URL\nLOGIN_REDIRECT_URL = '/'",
+        "peekOfCode": "STATIC_URL = 'static/'\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nAUTH_LOGIN_URL = '/accounts/login/'\nLOGIN_URL = AUTH_LOGIN_URL\nLOGIN_REDIRECT_URL = '/'\nLOGOUT_REDIRECT_URL = '/'",
         "detail": "config.settings",
         "documentation": {}
     },
@@ -412,7 +661,7 @@
         "kind": 5,
         "importPath": "config.settings",
         "description": "config.settings",
-        "peekOfCode": "DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nAUTH_LOGIN_URL = '/accounts/login/'\nLOGIN_URL = AUTH_LOGIN_URL\nLOGIN_REDIRECT_URL = '/'",
+        "peekOfCode": "DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nAUTH_LOGIN_URL = '/accounts/login/'\nLOGIN_URL = AUTH_LOGIN_URL\nLOGIN_REDIRECT_URL = '/'\nLOGOUT_REDIRECT_URL = '/'",
         "detail": "config.settings",
         "documentation": {}
     },
@@ -421,7 +670,7 @@
         "kind": 5,
         "importPath": "config.settings",
         "description": "config.settings",
-        "peekOfCode": "AUTH_LOGIN_URL = '/accounts/login/'\nLOGIN_URL = AUTH_LOGIN_URL\nLOGIN_REDIRECT_URL = '/'",
+        "peekOfCode": "AUTH_LOGIN_URL = '/accounts/login/'\nLOGIN_URL = AUTH_LOGIN_URL\nLOGIN_REDIRECT_URL = '/'\nLOGOUT_REDIRECT_URL = '/'",
         "detail": "config.settings",
         "documentation": {}
     },
@@ -430,7 +679,7 @@
         "kind": 5,
         "importPath": "config.settings",
         "description": "config.settings",
-        "peekOfCode": "LOGIN_URL = AUTH_LOGIN_URL\nLOGIN_REDIRECT_URL = '/'",
+        "peekOfCode": "LOGIN_URL = AUTH_LOGIN_URL\nLOGIN_REDIRECT_URL = '/'\nLOGOUT_REDIRECT_URL = '/'",
         "detail": "config.settings",
         "documentation": {}
     },
@@ -439,7 +688,16 @@
         "kind": 5,
         "importPath": "config.settings",
         "description": "config.settings",
-        "peekOfCode": "LOGIN_REDIRECT_URL = '/'",
+        "peekOfCode": "LOGIN_REDIRECT_URL = '/'\nLOGOUT_REDIRECT_URL = '/'",
+        "detail": "config.settings",
+        "documentation": {}
+    },
+    {
+        "label": "LOGOUT_REDIRECT_URL",
+        "kind": 5,
+        "importPath": "config.settings",
+        "description": "config.settings",
+        "peekOfCode": "LOGOUT_REDIRECT_URL = '/'",
         "detail": "config.settings",
         "documentation": {}
     },
@@ -448,7 +706,7 @@
         "kind": 5,
         "importPath": "config.urls",
         "description": "config.urls",
-        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n    path('', include('polls.urls')),\n    path('accounts/', include('django.contrib.auth.urls')),\n]",
+        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n    path('', include('polls.urls')),\n    path('accounts/register/', register, name='register'),\n    path('accounts/', include('django.contrib.auth.urls')),\n]",
         "detail": "config.urls",
         "documentation": {}
     },
@@ -462,11 +720,20 @@
         "documentation": {}
     },
     {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "polls.migrations.0002_alter_vote_unique_together_poll_poll_type_and_more",
+        "description": "polls.migrations.0002_alter_vote_unique_together_poll_poll_type_and_more",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('polls', '0001_initial'),\n    ]\n    operations = [\n        migrations.AlterUniqueTogether(\n            name='vote',\n            unique_together=set(),\n        ),\n        migrations.AddField(",
+        "detail": "polls.migrations.0002_alter_vote_unique_together_poll_poll_type_and_more",
+        "documentation": {}
+    },
+    {
         "label": "ChoiceInline",
         "kind": 6,
         "importPath": "polls.admin",
         "description": "polls.admin",
-        "peekOfCode": "class ChoiceInline(admin.TabularInline):\n    model = Choice\n    extra = 3\nclass PollAdmin(admin.ModelAdmin):\n    inlines = [ChoiceInline]\n    list_display = ['question', 'is_active', 'created_at']\nadmin.site.register(Poll, PollAdmin)\nadmin.site.register(Choice)",
+        "peekOfCode": "class ChoiceInline(admin.TabularInline):\n    model = Choice\n    extra = 3\nclass PollAdmin(admin.ModelAdmin):\n    list_display = ['question', 'poll_type', 'is_active', 'created_at']\n    def get_inline_instances(self, request, obj=None):\n        # Initialiser avec la configuration par défaut\n        inlines = []\n        # N'afficher ChoiceInline que si le sondage est single ou multiple\n        # Si c'est en création (obj=None), on l'affiche par défaut.",
         "detail": "polls.admin",
         "documentation": {}
     },
@@ -475,7 +742,7 @@
         "kind": 6,
         "importPath": "polls.admin",
         "description": "polls.admin",
-        "peekOfCode": "class PollAdmin(admin.ModelAdmin):\n    inlines = [ChoiceInline]\n    list_display = ['question', 'is_active', 'created_at']\nadmin.site.register(Poll, PollAdmin)\nadmin.site.register(Choice)",
+        "peekOfCode": "class PollAdmin(admin.ModelAdmin):\n    list_display = ['question', 'poll_type', 'is_active', 'created_at']\n    def get_inline_instances(self, request, obj=None):\n        # Initialiser avec la configuration par défaut\n        inlines = []\n        # N'afficher ChoiceInline que si le sondage est single ou multiple\n        # Si c'est en création (obj=None), on l'affiche par défaut.\n        if not obj or obj.poll_type in [Poll.SINGLE, Poll.MULTIPLE]:\n            inlines.append(ChoiceInline(self.model, self.admin_site))\n        return inlines",
         "detail": "polls.admin",
         "documentation": {}
     },
@@ -489,11 +756,29 @@
         "documentation": {}
     },
     {
+        "label": "RegisterForm",
+        "kind": 6,
+        "importPath": "polls.forms",
+        "description": "polls.forms",
+        "peekOfCode": "class RegisterForm(UserCreationForm):\n    email = forms.EmailField(required=False, label=\"Email (optionnel)\")\n    class Meta:\n        model = User\n        fields = ['username', 'email']\nclass PollForm(forms.ModelForm):\n    class Meta:\n        model = Poll\n        fields = ['question', 'poll_type']\n        labels = {",
+        "detail": "polls.forms",
+        "documentation": {}
+    },
+    {
+        "label": "PollForm",
+        "kind": 6,
+        "importPath": "polls.forms",
+        "description": "polls.forms",
+        "peekOfCode": "class PollForm(forms.ModelForm):\n    class Meta:\n        model = Poll\n        fields = ['question', 'poll_type']\n        labels = {\n            'question': 'Votre question',\n            'poll_type': 'Type de sondage'\n        }\n        widgets = {\n            'question': forms.TextInput(attrs={",
+        "detail": "polls.forms",
+        "documentation": {}
+    },
+    {
         "label": "Poll",
         "kind": 6,
         "importPath": "polls.models",
         "description": "polls.models",
-        "peekOfCode": "class Poll(models.Model):\n    question = models.CharField(max_length=255)\n    created_at = models.DateTimeField(auto_now_add=True)\n    is_active = models.BooleanField(default=True)\n    def __str__(self):\n        return self.question\nclass Choice(models.Model):\n    poll = models.ForeignKey(Poll, related_name='choices', on_delete=models.CASCADE)\n    text = models.CharField(max_length=255)\n    @property",
+        "peekOfCode": "class Poll(models.Model):\n    SINGLE   = 'single'\n    MULTIPLE = 'multiple'\n    RATING   = 'rating'\n    TEXT     = 'text'\n    POLL_TYPES = [\n        (SINGLE,   'Choix unique'),\n        (MULTIPLE, 'Choix multiple'),\n        (RATING,   'Échelle 1 à 5'),\n        (TEXT,     'Texte libre'),",
         "detail": "polls.models",
         "documentation": {}
     },
@@ -511,7 +796,7 @@
         "kind": 6,
         "importPath": "polls.models",
         "description": "polls.models",
-        "peekOfCode": "class Vote(models.Model):\n    user = models.ForeignKey(User, on_delete=models.CASCADE)\n    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)\n    choice = models.ForeignKey(Choice, related_name='votes', on_delete=models.CASCADE)\n    class Meta:\n        unique_together = ['user', 'poll']",
+        "peekOfCode": "class Vote(models.Model):\n    user = models.ForeignKey(User, on_delete=models.CASCADE)\n    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)\n    choice = models.ForeignKey(Choice, related_name='votes', on_delete=models.CASCADE, null=True, blank=True)\n    score = models.IntegerField(null=True, blank=True)\n    answer_text = models.TextField(null=True, blank=True)",
         "detail": "polls.models",
         "documentation": {}
     },
@@ -529,7 +814,7 @@
         "kind": 5,
         "importPath": "polls.urls",
         "description": "polls.urls",
-        "peekOfCode": "app_name = 'polls'\nurlpatterns = [\n    path('', views.poll_list, name='list'),\n    path('<int:poll_id>/', views.vote, name='detail'),\n    path('<int:poll_id>/results/', views.results, name='results'),\n]",
+        "peekOfCode": "app_name = 'polls'\nurlpatterns = [\n    path('', views.poll_list, name='list'),\n    path('dashboard/', views.dashboard, name='dashboard'),\n    path('create/', views.poll_create, name='create'),\n    path('<int:poll_id>/', views.vote, name='detail'),\n    path('<int:poll_id>/results/', views.results, name='results'),\n    path('<int:poll_id>/export/csv/', views.export_poll_csv, name='export_csv'),\n    path('<int:poll_id>/export/pdf/', views.export_poll_pdf, name='export_pdf'),\n]",
         "detail": "polls.urls",
         "documentation": {}
     },
@@ -538,7 +823,7 @@
         "kind": 5,
         "importPath": "polls.urls",
         "description": "polls.urls",
-        "peekOfCode": "urlpatterns = [\n    path('', views.poll_list, name='list'),\n    path('<int:poll_id>/', views.vote, name='detail'),\n    path('<int:poll_id>/results/', views.results, name='results'),\n]",
+        "peekOfCode": "urlpatterns = [\n    path('', views.poll_list, name='list'),\n    path('dashboard/', views.dashboard, name='dashboard'),\n    path('create/', views.poll_create, name='create'),\n    path('<int:poll_id>/', views.vote, name='detail'),\n    path('<int:poll_id>/results/', views.results, name='results'),\n    path('<int:poll_id>/export/csv/', views.export_poll_csv, name='export_csv'),\n    path('<int:poll_id>/export/pdf/', views.export_poll_pdf, name='export_pdf'),\n]",
         "detail": "polls.urls",
         "documentation": {}
     },
@@ -547,7 +832,7 @@
         "kind": 2,
         "importPath": "polls.views",
         "description": "polls.views",
-        "peekOfCode": "def poll_list(request):\n    polls = Poll.objects.filter(is_active=True).order_by('-created_at')\n    return render(request, 'polls/list.html', {'polls': polls})\n@login_required\ndef vote(request, poll_id):\n    poll = get_object_or_404(Poll, pk=poll_id, is_active=True)\n    if request.method == 'POST':\n        try:\n            selected_choice = poll.choices.get(pk=request.POST['choice'])\n        except (KeyError, Choice.DoesNotExist):",
+        "peekOfCode": "def poll_list(request):\n    polls = Poll.objects.filter(is_active=True).order_by('-created_at')\n    user_voted_polls = []\n    if request.user.is_authenticated:\n        user_voted_polls = Vote.objects.filter(user=request.user).values_list('poll_id', flat=True).distinct()\n    return render(request, 'polls/list.html', {\n        'polls': polls,\n        'user_voted_polls': list(user_voted_polls)\n    })\n@login_required",
         "detail": "polls.views",
         "documentation": {}
     },
@@ -556,7 +841,7 @@
         "kind": 2,
         "importPath": "polls.views",
         "description": "polls.views",
-        "peekOfCode": "def vote(request, poll_id):\n    poll = get_object_or_404(Poll, pk=poll_id, is_active=True)\n    if request.method == 'POST':\n        try:\n            selected_choice = poll.choices.get(pk=request.POST['choice'])\n        except (KeyError, Choice.DoesNotExist):\n            return render(request, 'polls/detail.html', {\n                'poll': poll,\n                'error_message': \"Vous n'avez pas sélectionné de choix.\",\n            })",
+        "peekOfCode": "def vote(request, poll_id):\n    poll = get_object_or_404(Poll, pk=poll_id, is_active=True)\n    # Verification au niveau de la vue (remplace unique_together)\n    if Vote.objects.filter(user=request.user, poll=poll).exists():\n        messages.error(request, \"Vous avez déjà voté pour ce sondage.\")\n        return redirect('polls:results', poll_id=poll.id)\n    if request.method == 'POST':\n        ptype = poll.poll_type\n        saved_votes = False\n        if ptype == Poll.SINGLE:",
         "detail": "polls.views",
         "documentation": {}
     },
@@ -565,7 +850,52 @@
         "kind": 2,
         "importPath": "polls.views",
         "description": "polls.views",
-        "peekOfCode": "def results(request, poll_id):\n    poll = get_object_or_404(Poll, pk=poll_id)\n    return render(request, 'polls/results.html', {'poll': poll})",
+        "peekOfCode": "def results(request, poll_id):\n    poll = get_object_or_404(Poll, pk=poll_id)\n    context = {'poll': poll, 'total_votes': 0}\n    ptype = poll.poll_type\n    if ptype in [Poll.SINGLE, Poll.MULTIPLE]:\n        context['total_votes'] = poll.vote_set.values('user').distinct().count()\n    elif ptype == Poll.RATING:\n        context['total_votes'] = poll.vote_set.count()\n        agg = poll.vote_set.aggregate(avg=Avg('score'))\n        context['average_score'] = round(agg['avg'], 1) if agg['avg'] else 0",
+        "detail": "polls.views",
+        "documentation": {}
+    },
+    {
+        "label": "register",
+        "kind": 2,
+        "importPath": "polls.views",
+        "description": "polls.views",
+        "peekOfCode": "def register(request):\n    if request.user.is_authenticated:\n        return redirect('polls:list')\n    form = RegisterForm(request.POST or None)\n    if request.method == 'POST' and form.is_valid():\n        user = form.save()\n        login(request, user)\n        messages.success(request, f\"Bienvenue {user.username} !\")\n        return redirect('polls:list')\n    return render(request, 'registration/register.html', {'form': form})",
+        "detail": "polls.views",
+        "documentation": {}
+    },
+    {
+        "label": "poll_create",
+        "kind": 2,
+        "importPath": "polls.views",
+        "description": "polls.views",
+        "peekOfCode": "def poll_create(request):\n    if request.method == 'POST':\n        form = PollForm(request.POST)\n        if form.is_valid():\n            poll = form.save()\n            # Handle choices if necessary\n            if poll.poll_type in [Poll.SINGLE, Poll.MULTIPLE]:\n                choice_texts = request.POST.getlist('choice_text')\n                for text in choice_texts:\n                    if text.strip():",
+        "detail": "polls.views",
+        "documentation": {}
+    },
+    {
+        "label": "dashboard",
+        "kind": 2,
+        "importPath": "polls.views",
+        "description": "polls.views",
+        "peekOfCode": "def dashboard(request):\n    polls = Poll.objects.annotate(vote_count=Count('vote')).order_by('-created_at')\n    total_polls = polls.count()\n    total_votes = Vote.objects.count()\n    active_polls = polls.filter(is_active=True).count()\n    # Répartition par type\n    type_counts = {\n        'single':   polls.filter(poll_type=Poll.SINGLE).count(),\n        'multiple': polls.filter(poll_type=Poll.MULTIPLE).count(),\n        'rating':   polls.filter(poll_type=Poll.RATING).count(),",
+        "detail": "polls.views",
+        "documentation": {}
+    },
+    {
+        "label": "export_poll_csv",
+        "kind": 2,
+        "importPath": "polls.views",
+        "description": "polls.views",
+        "peekOfCode": "def export_poll_csv(request, poll_id):\n    poll = get_object_or_404(Poll, pk=poll_id)\n    response = HttpResponse(content_type='text/csv; charset=utf-8')\n    response['Content-Disposition'] = f'attachment; filename=\"sondage_{poll.id}.csv\"'\n    response.write('\\ufeff')  # BOM pour Excel\n    writer = csv.writer(response)\n    if poll.poll_type in [Poll.SINGLE, Poll.MULTIPLE]:\n        writer.writerow(['Choix', 'Nombre de votes', '% du total'])\n        total = Vote.objects.filter(poll=poll, choice__isnull=False).count()\n        for choice in poll.choices.all():",
+        "detail": "polls.views",
+        "documentation": {}
+    },
+    {
+        "label": "export_poll_pdf",
+        "kind": 2,
+        "importPath": "polls.views",
+        "description": "polls.views",
+        "peekOfCode": "def export_poll_pdf(request, poll_id):\n    poll = get_object_or_404(Poll, pk=poll_id)\n    buffer = BytesIO()\n    doc = SimpleDocTemplate(\n        buffer, pagesize=A4,\n        leftMargin=2*cm, rightMargin=2*cm,\n        topMargin=2.5*cm, bottomMargin=2*cm,\n        title=f\"Rapport – {poll.question}\"\n    )\n    styles = getSampleStyleSheet()",
         "detail": "polls.views",
         "documentation": {}
     },
